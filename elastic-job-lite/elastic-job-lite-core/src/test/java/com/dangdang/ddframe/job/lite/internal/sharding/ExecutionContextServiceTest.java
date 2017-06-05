@@ -18,6 +18,7 @@
 package com.dangdang.ddframe.job.lite.internal.sharding;
 
 import com.dangdang.ddframe.job.config.JobCoreConfiguration;
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import com.dangdang.ddframe.job.config.dataflow.DataflowJobConfiguration;
 import com.dangdang.ddframe.job.executor.ShardingContexts;
 import com.dangdang.ddframe.job.lite.api.strategy.JobInstance;
@@ -63,7 +64,7 @@ public final class ExecutionContextServiceTest {
     
     @Test
     public void assertGetShardingContextWhenNotAssignShardingItem() {
-        when(configService.load(false)).thenReturn(LiteJobConfiguration.newBuilder(new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3).build(), 
+        when(configService.load(false)).thenReturn(LiteJobConfiguration.newBuilder(new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3).build(),
                 TestDataflowJob.class.getCanonicalName(), true)).monitorExecution(false).build());
         ShardingContexts shardingContexts = executionContextService.getJobShardingContext(Collections.<Integer>emptyList());
         assertTrue(shardingContexts.getTaskId().startsWith("test_job@-@@-@READY@-@"));
@@ -72,7 +73,7 @@ public final class ExecutionContextServiceTest {
     
     @Test
     public void assertGetShardingContextWhenAssignShardingItems() {
-        when(configService.load(false)).thenReturn(LiteJobConfiguration.newBuilder(new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3)
+        when(configService.load(false)).thenReturn(LiteJobConfiguration.newBuilder(new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3)
                 .shardingItemParameters("0=A,1=B,2=C").build(), TestDataflowJob.class.getCanonicalName(), true)).monitorExecution(false).build());
         Map<Integer, String> map = new HashMap<>(3);
         map.put(0, "A");
@@ -83,7 +84,7 @@ public final class ExecutionContextServiceTest {
     
     @Test
     public void assertGetShardingContextWhenHasRunningItems() {
-        when(configService.load(false)).thenReturn(LiteJobConfiguration.newBuilder(new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3)
+        when(configService.load(false)).thenReturn(LiteJobConfiguration.newBuilder(new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3)
                 .shardingItemParameters("0=A,1=B,2=C").build(), TestDataflowJob.class.getCanonicalName(), true)).monitorExecution(true).build());
         when(jobNodeStorage.isJobNodeExisted("sharding/0/running")).thenReturn(false);
         when(jobNodeStorage.isJobNodeExisted("sharding/1/running")).thenReturn(true);

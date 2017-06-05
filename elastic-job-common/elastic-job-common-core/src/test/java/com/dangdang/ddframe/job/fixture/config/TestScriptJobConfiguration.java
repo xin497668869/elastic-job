@@ -20,6 +20,7 @@ package com.dangdang.ddframe.job.fixture.config;
 import com.dangdang.ddframe.job.config.JobCoreConfiguration;
 import com.dangdang.ddframe.job.config.JobRootConfiguration;
 import com.dangdang.ddframe.job.config.JobTypeConfiguration;
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import com.dangdang.ddframe.job.config.script.ScriptJobConfiguration;
 import com.dangdang.ddframe.job.executor.handler.JobExceptionHandler;
 import com.dangdang.ddframe.job.executor.handler.JobProperties;
@@ -35,7 +36,7 @@ public final class TestScriptJobConfiguration implements JobRootConfiguration {
     
     @Override
     public JobTypeConfiguration getTypeConfig() {
-        return new ScriptJobConfiguration(JobCoreConfiguration.newBuilder(ShardingContextsBuilder.JOB_NAME, "0/1 * * * * ?", 3)
+        return new ScriptJobConfiguration(JobCoreConfiguration.newBuilder(ShardingContextsBuilder.JOB_NAME, new TriggerConfiguration("0/1 * * * * ?"), 3)
                 .jobProperties(JobProperties.JobPropertiesEnum.JOB_EXCEPTION_HANDLER.getKey(), jobExceptionHandlerClass.getCanonicalName()).build(), scriptCommandLine);
     }
 }

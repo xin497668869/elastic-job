@@ -17,8 +17,9 @@
 
 package com.dangdang.ddframe.job.lite.fixture.util;
 
-import com.dangdang.ddframe.job.config.JobCoreConfiguration;
 import com.dangdang.ddframe.job.api.dataflow.DataflowJob;
+import com.dangdang.ddframe.job.config.JobCoreConfiguration;
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import com.dangdang.ddframe.job.config.dataflow.DataflowJobConfiguration;
 import com.dangdang.ddframe.job.config.simple.SimpleJobConfiguration;
 import com.dangdang.ddframe.job.lite.config.LiteJobConfiguration;
@@ -39,16 +40,16 @@ public final class JobConfigurationUtil {
     }
     
     public static LiteJobConfiguration createSimpleLiteJobConfiguration() {
-        return LiteJobConfiguration.newBuilder(new SimpleJobConfiguration(JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3).build(), TestSimpleJob.class.getCanonicalName())).build();
+        return LiteJobConfiguration.newBuilder(new SimpleJobConfiguration(JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3).build(), TestSimpleJob.class.getCanonicalName())).build();
     }
     
     public static LiteJobConfiguration createSimpleLiteJobConfiguration(final boolean overwrite) {
-        return LiteJobConfiguration.newBuilder(new SimpleJobConfiguration(JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3).build(), 
+        return LiteJobConfiguration.newBuilder(new SimpleJobConfiguration(JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3).build(),
                 TestSimpleJob.class.getCanonicalName())).overwrite(overwrite).build();
     }
     
     public static LiteJobConfiguration createDataflowLiteJobConfiguration() {
         return LiteJobConfiguration.newBuilder(
-                new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3).build(), DataflowJob.class.getCanonicalName(), false)).build();
+                new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3).build(), DataflowJob.class.getCanonicalName(), false)).build();
     }
 }

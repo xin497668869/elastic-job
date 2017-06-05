@@ -17,6 +17,7 @@
 
 package com.dangdang.ddframe.job.lite.lifecycle.domain;
 
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,7 +40,7 @@ public final class JobBriefInfo implements Serializable, Comparable<JobBriefInfo
     
     private String description;
     
-    private String cron;
+    private TriggerConfiguration triggerConfiguration;
     
     private int instanceCount;
     

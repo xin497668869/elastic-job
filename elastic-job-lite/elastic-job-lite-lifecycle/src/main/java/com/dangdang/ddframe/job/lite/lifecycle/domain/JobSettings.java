@@ -17,6 +17,7 @@
 
 package com.dangdang.ddframe.job.lite.lifecycle.domain;
 
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import com.dangdang.ddframe.job.executor.handler.JobProperties.JobPropertiesEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,7 +43,7 @@ public final class JobSettings implements Serializable {
     
     private String jobClass;
     
-    private String cron;
+    private TriggerConfiguration triggerConfiguration;
     
     private int shardingTotalCount;
     

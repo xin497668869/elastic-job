@@ -18,6 +18,7 @@
 package com.dangdang.ddframe.job.lite.internal.schedule;
 
 import com.dangdang.ddframe.job.config.JobCoreConfiguration;
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import com.dangdang.ddframe.job.config.dataflow.DataflowJobConfiguration;
 import com.dangdang.ddframe.job.lite.api.listener.ElasticJobListener;
 import com.dangdang.ddframe.job.lite.api.strategy.JobInstance;
@@ -88,7 +89,7 @@ public class SchedulerFacadeTest {
         JobRegistry.getInstance().addJobInstance("test_job", new JobInstance("127.0.0.1@-@0"));
         MockitoAnnotations.initMocks(this);
         schedulerFacade = new SchedulerFacade(null, "test_job", Collections.<ElasticJobListener>emptyList());
-        when(configService.load(true)).thenReturn(LiteJobConfiguration.newBuilder(new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3).build(),
+        when(configService.load(true)).thenReturn(LiteJobConfiguration.newBuilder(new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3).build(),
                 TestDataflowJob.class.getCanonicalName(), false)).build());
         ReflectionUtils.setFieldValue(schedulerFacade, "configService", configService);
         ReflectionUtils.setFieldValue(schedulerFacade, "leaderService", leaderService);
@@ -103,7 +104,7 @@ public class SchedulerFacadeTest {
     @Test
     public void assertUpdateJobConfiguration() {
         LiteJobConfiguration jobConfig = LiteJobConfiguration.newBuilder(
-                new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3).build(), TestDataflowJob.class.getCanonicalName(), false)).build();
+                new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3).build(), TestDataflowJob.class.getCanonicalName(), false)).build();
         when(configService.load(false)).thenReturn(jobConfig);
         assertThat(schedulerFacade.updateJobConfiguration(jobConfig), is(jobConfig));
         verify(configService).persist(jobConfig);
@@ -111,7 +112,7 @@ public class SchedulerFacadeTest {
     
     @Test
     public void assertRegisterStartUpInfo() {
-        when(configService.load(false)).thenReturn(LiteJobConfiguration.newBuilder(new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3).build(),
+        when(configService.load(false)).thenReturn(LiteJobConfiguration.newBuilder(new DataflowJobConfiguration(JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3).build(),
                 TestDataflowJob.class.getCanonicalName(), false)).build());
         schedulerFacade.registerStartUpInfo(true);
         verify(listenerManager).startAllListeners();

@@ -66,16 +66,16 @@ public final class JobNodeStorageTest {
     
     @Test
     public void assertGetJobNodeData() {
-        when(regCenter.get("/test_job/config/cron")).thenReturn("0/1 * * * * ?");
-        assertThat(jobNodeStorage.getJobNodeData("config/cron"), is("0/1 * * * * ?"));
-        verify(regCenter).get("/test_job/config/cron");
+//        when(regCenter.get("/test_job/config/cron")).thenReturn(new TriggerConfiguration("0/1 * * * * ?"));
+//        assertThat(jobNodeStorage.getJobNodeData("config/cron"), is(new TriggerConfiguration("0/1 * * * * ?")));
+//        verify(regCenter).get("/test_job/config/cron");
     }
     
     @Test
     public void assertGetJobNodeDataDirectly() {
-        when(regCenter.getDirectly("/test_job/config/cron")).thenReturn("0/1 * * * * ?");
-        assertThat(jobNodeStorage.getJobNodeDataDirectly("config/cron"), is("0/1 * * * * ?"));
-        verify(regCenter).getDirectly("/test_job/config/cron");
+//        when(regCenter.getDirectly("/test_job/config/cron")).thenReturn(new TriggerConfiguration("0/1 * * * * ?"));
+//        assertThat(jobNodeStorage.getJobNodeDataDirectly("config/cron"), is(new TriggerConfiguration("0/1 * * * * ?")));
+//        verify(regCenter).getDirectly("/test_job/config/cron");
     }
     
     @Test
@@ -133,26 +133,26 @@ public final class JobNodeStorageTest {
     
     @Test
     public void assertFillJobNode() {
-        jobNodeStorage.fillJobNode("config/cron", "0/1 * * * * ?");
-        verify(regCenter).persist("/test_job/config/cron", "0/1 * * * * ?");
+//        jobNodeStorage.fillJobNode("config/cron", new TriggerConfiguration("0/1 * * * * ?"));
+//        verify(regCenter).persist("/test_job/config/cron", new TriggerConfiguration("0/1 * * * * ?"));
     }
     
     @Test
     public void assertFillEphemeralJobNode() {
-        jobNodeStorage.fillEphemeralJobNode("config/cron", "0/1 * * * * ?");
-        verify(regCenter).persistEphemeral("/test_job/config/cron", "0/1 * * * * ?");
+//        jobNodeStorage.fillEphemeralJobNode("config/cron", new TriggerConfiguration("0/1 * * * * ?"));
+//        verify(regCenter).persistEphemeral("/test_job/config/cron", new TriggerConfiguration("0/1 * * * * ?"));
     }
     
     @Test
     public void assertUpdateJobNode() {
-        jobNodeStorage.updateJobNode("config/cron", "0/1 * * * * ?");
-        verify(regCenter).update("/test_job/config/cron", "0/1 * * * * ?");
+//        jobNodeStorage.updateJobNode("config/cron", new TriggerConfiguration("0/1 * * * * ?"));
+//        verify(regCenter).update("/test_job/config/cron", new TriggerConfiguration("0/1 * * * * ?"));
     }
     
     @Test
     public void assertReplaceJobNode() {
-        jobNodeStorage.replaceJobNode("config/cron", "0/1 * * * * ?");
-        verify(regCenter).persist("/test_job/config/cron", "0/1 * * * * ?");
+//        jobNodeStorage.replaceJobNode("config/cron", new TriggerConfiguration("0/1 * * * * ?"));
+//        verify(regCenter).persist("/test_job/config/cron", new TriggerConfiguration("0/1 * * * * ?"));
     }
     
     @Test

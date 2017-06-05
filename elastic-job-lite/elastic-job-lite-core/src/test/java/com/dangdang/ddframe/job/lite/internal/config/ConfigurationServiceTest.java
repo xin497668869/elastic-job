@@ -17,12 +17,13 @@
 
 package com.dangdang.ddframe.job.lite.internal.config;
 
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import com.dangdang.ddframe.job.exception.JobConfigurationException;
 import com.dangdang.ddframe.job.exception.JobExecutionEnvironmentException;
 import com.dangdang.ddframe.job.lite.config.LiteJobConfiguration;
 import com.dangdang.ddframe.job.lite.fixture.LiteJsonConstants;
-import com.dangdang.ddframe.job.lite.internal.storage.JobNodeStorage;
 import com.dangdang.ddframe.job.lite.fixture.util.JobConfigurationUtil;
+import com.dangdang.ddframe.job.lite.internal.storage.JobNodeStorage;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -52,7 +53,7 @@ public final class ConfigurationServiceTest {
         when(jobNodeStorage.getJobNodeDataDirectly(ConfigurationNode.ROOT)).thenReturn(LiteJsonConstants.getJobJson());
         LiteJobConfiguration actual = configService.load(false);
         assertThat(actual.getJobName(), is("test_job"));
-        assertThat(actual.getTypeConfig().getCoreConfig().getCron(), is("0/1 * * * * ?"));
+        assertThat(actual.getTypeConfig().getCoreConfig().getTriggerConfiguration(), is(new TriggerConfiguration("0/1 * * * * ?")));
         assertThat(actual.getTypeConfig().getCoreConfig().getShardingTotalCount(), is(3));
     }
     
@@ -61,7 +62,7 @@ public final class ConfigurationServiceTest {
         when(jobNodeStorage.getJobNodeData(ConfigurationNode.ROOT)).thenReturn(LiteJsonConstants.getJobJson());
         LiteJobConfiguration actual = configService.load(true);
         assertThat(actual.getJobName(), is("test_job"));
-        assertThat(actual.getTypeConfig().getCoreConfig().getCron(), is("0/1 * * * * ?"));
+        assertThat(actual.getTypeConfig().getCoreConfig().getTriggerConfiguration(), is(new TriggerConfiguration("0/1 * * * * ?")));
         assertThat(actual.getTypeConfig().getCoreConfig().getShardingTotalCount(), is(3));
     }
     
@@ -71,7 +72,7 @@ public final class ConfigurationServiceTest {
         when(jobNodeStorage.getJobNodeDataDirectly(ConfigurationNode.ROOT)).thenReturn(LiteJsonConstants.getJobJson());
         LiteJobConfiguration actual = configService.load(true);
         assertThat(actual.getJobName(), is("test_job"));
-        assertThat(actual.getTypeConfig().getCoreConfig().getCron(), is("0/1 * * * * ?"));
+        assertThat(actual.getTypeConfig().getCoreConfig().getTriggerConfiguration(), is(new TriggerConfiguration("0/1 * * * * ?")));
         assertThat(actual.getTypeConfig().getCoreConfig().getShardingTotalCount(), is(3));
     }
     

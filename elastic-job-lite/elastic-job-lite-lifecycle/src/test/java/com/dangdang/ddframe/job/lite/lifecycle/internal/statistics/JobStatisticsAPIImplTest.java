@@ -17,6 +17,7 @@
 
 package com.dangdang.ddframe.job.lite.lifecycle.internal.statistics;
 
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import com.dangdang.ddframe.job.lite.lifecycle.api.JobStatisticsAPI;
 import com.dangdang.ddframe.job.lite.lifecycle.domain.JobBriefInfo;
 import com.dangdang.ddframe.job.lite.lifecycle.domain.JobBriefInfo.JobStatus;
@@ -67,7 +68,7 @@ public final class JobStatisticsAPIImplTest {
         JobBriefInfo jobBrief = jobStatisticsAPI.getJobBriefInfo("test_job");
         assertThat(jobBrief.getJobName(), is("test_job"));
         assertThat(jobBrief.getDescription(), is("desc"));
-        assertThat(jobBrief.getCron(), is("0/1 * * * * ?"));
+        assertThat(jobBrief.getTriggerConfiguration(), is(new TriggerConfiguration("0/1 * * * * ?")));
         assertThat(jobBrief.getInstanceCount(), is(2));
         assertThat(jobBrief.getShardingTotalCount(), is(3));
         assertThat(jobBrief.getStatus(), is(JobStatus.OK));
@@ -151,7 +152,7 @@ public final class JobStatisticsAPIImplTest {
             i++;
             assertThat(each.getJobName(), is("test_job_" + i));
             assertThat(each.getDescription(), is("desc" + i));
-            assertThat(each.getCron(), is("0/1 * * * * ?"));
+            assertThat(each.getTriggerConfiguration(), is(new TriggerConfiguration("0/1 * * * * ?")));
             assertThat(each.getInstanceCount(), is(2));
             assertThat(each.getShardingTotalCount(), is(3));
             assertThat(each.getStatus(), is(JobStatus.OK));

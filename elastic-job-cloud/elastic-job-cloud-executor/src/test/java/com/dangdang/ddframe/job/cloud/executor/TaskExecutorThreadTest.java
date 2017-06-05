@@ -142,7 +142,7 @@ public final class TaskExecutorThreadTest {
     }
     
     private Map<String, String> buildBaseJobConfigurationContextMapWithJobClass(final String jobClass) {
-        return buildBaseJobConfigurationContextMapWithJobClassAndCron(jobClass, "0/1 * * * * ?");
+        return buildBaseJobConfigurationContextMapWithJobClassAndCron(jobClass, new TriggerConfiguration("0/1 * * * * ?"));
     }
     
     private Map<String, String> buildBaseJobConfigurationContextMapWithJobClassAndCron(final String jobClass, final String cron) {

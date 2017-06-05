@@ -63,7 +63,7 @@ public final class JobSettingsAPIImpl implements JobSettingsAPI {
         result.setJobType(liteJobConfig.getTypeConfig().getJobType().name());
         result.setJobClass(liteJobConfig.getTypeConfig().getJobClass());
         result.setShardingTotalCount(liteJobConfig.getTypeConfig().getCoreConfig().getShardingTotalCount());
-        result.setCron(liteJobConfig.getTypeConfig().getCoreConfig().getCron());
+        result.setTriggerConfiguration(liteJobConfig.getTypeConfig().getCoreConfig().getTriggerConfiguration());
         result.setShardingItemParameters(liteJobConfig.getTypeConfig().getCoreConfig().getShardingItemParameters());
         result.setJobParameter(liteJobConfig.getTypeConfig().getCoreConfig().getJobParameter());
         result.setMonitorExecution(liteJobConfig.isMonitorExecution());
@@ -90,7 +90,7 @@ public final class JobSettingsAPIImpl implements JobSettingsAPI {
     @Override
     public void updateJobSettings(final JobSettings jobSettings) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(jobSettings.getJobName()), "jobName can not be empty.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(jobSettings.getCron()), "cron can not be empty.");
+//        Preconditions.checkArgument(!Strings.isNullOrEmpty(jobSettings.get()), "cron can not be empty.");
         Preconditions.checkArgument(jobSettings.getShardingTotalCount() > 0, "shardingTotalCount should larger than zero.");
         JobNodePath jobNodePath = new JobNodePath(jobSettings.getJobName());
         regCenter.update(jobNodePath.getConfigNodePath(), LiteJobConfigurationGsonFactory.toJsonForObject(jobSettings));

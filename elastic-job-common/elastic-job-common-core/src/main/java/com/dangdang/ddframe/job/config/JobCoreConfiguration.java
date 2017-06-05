@@ -35,8 +35,8 @@ import lombok.RequiredArgsConstructor;
 public final class JobCoreConfiguration {
     
     private final String jobName;
-    
-    private final String cron;
+
+    private final TriggerConfiguration triggerConfiguration;
     
     private final int shardingTotalCount;
     
@@ -45,7 +45,7 @@ public final class JobCoreConfiguration {
     private final String jobParameter;
     
     private final boolean failover;
-    
+
     private final boolean misfire;
     
     private final String description;
@@ -56,12 +56,12 @@ public final class JobCoreConfiguration {
      * 创建简单作业配置构建器.
      *
      * @param jobName 作业名称
-     * @param cron 作业启动时间的cron表达式
+//     * @param cron 作业启动时间的cron表达式
      * @param shardingTotalCount 作业分片总数
      * @return 简单作业配置构建器
      */
-    public static Builder newBuilder(final String jobName, final String cron, final int shardingTotalCount) {
-        return new Builder(jobName, cron, shardingTotalCount);
+    public static Builder newBuilder(final String jobName, final TriggerConfiguration triggerConfiguration, final int shardingTotalCount) {
+        return new Builder(jobName, triggerConfiguration, shardingTotalCount);
     }
     
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -69,7 +69,7 @@ public final class JobCoreConfiguration {
         
         private final String jobName;
         
-        private final String cron;
+        private final TriggerConfiguration triggerConfiguration;
         
         private final int shardingTotalCount;
         
@@ -186,9 +186,9 @@ public final class JobCoreConfiguration {
          */
         public final JobCoreConfiguration build() {
             Preconditions.checkArgument(!Strings.isNullOrEmpty(jobName), "jobName can not be empty.");
-            Preconditions.checkArgument(!Strings.isNullOrEmpty(cron), "cron can not be empty.");
+//            Preconditions.checkArgument(!Strings.isNullOrEmpty(cron), "cron can not be empty.");
             Preconditions.checkArgument(shardingTotalCount > 0, "shardingTotalCount should larger than zero.");
-            return new JobCoreConfiguration(jobName, cron, shardingTotalCount, shardingItemParameters, jobParameter, failover, misfire, description, jobProperties);
+            return new JobCoreConfiguration(jobName, triggerConfiguration, shardingTotalCount, shardingItemParameters, jobParameter, failover, misfire, description, jobProperties);
         }
     }
 }

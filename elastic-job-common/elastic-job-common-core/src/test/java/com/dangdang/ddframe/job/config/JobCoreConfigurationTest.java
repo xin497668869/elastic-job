@@ -31,7 +31,7 @@ public final class JobCoreConfigurationTest {
     
     @Test
     public void assertBuildAllProperties() {
-        JobCoreConfiguration actual = JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3)
+        JobCoreConfiguration actual = JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3)
                 .shardingItemParameters("0=a,1=b,2=c").jobParameter("param").failover(true).misfire(false).description("desc")
                 .jobProperties("job_exception_handler", IgnoreJobExceptionHandler.class.getName()).build();
         assertRequiredProperties(actual);
@@ -45,7 +45,7 @@ public final class JobCoreConfigurationTest {
     
     @Test
     public void assertBuildRequiredProperties() {
-        JobCoreConfiguration actual = JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3).build();
+        JobCoreConfiguration actual = JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3).build();
         assertRequiredProperties(actual);
         assertDefaultValues(actual);
     }
@@ -53,14 +53,14 @@ public final class JobCoreConfigurationTest {
     @Test
     public void assertBuildWhenOptionalParametersIsNull() {
         //noinspection NullArgumentToVariableArgMethod
-        JobCoreConfiguration actual = JobCoreConfiguration.newBuilder("test_job", "0/1 * * * * ?", 3).shardingItemParameters(null).jobParameter(null).description(null).build();
+        JobCoreConfiguration actual = JobCoreConfiguration.newBuilder("test_job", new TriggerConfiguration("0/1 * * * * ?"), 3).shardingItemParameters(null).jobParameter(null).description(null).build();
         assertRequiredProperties(actual);
         assertDefaultValues(actual);
     }
     
     private void assertRequiredProperties(final JobCoreConfiguration actual) {
         assertThat(actual.getJobName(), is("test_job"));
-        assertThat(actual.getCron(), is("0/1 * * * * ?"));
+        assertThat(actual.getTriggerConfiguration(), is(new TriggerConfiguration("0/1 * * * * ?")));
         assertThat(actual.getShardingTotalCount(), is(3));
     }
     
@@ -75,7 +75,7 @@ public final class JobCoreConfigurationTest {
     
     @Test(expected = IllegalArgumentException.class)
     public void assertBuildWhenJobNameIsNull() {
-        JobCoreConfiguration.newBuilder(null, "0/1 * * * * ?", 3).build();
+        JobCoreConfiguration.newBuilder(null, new TriggerConfiguration("0/1 * * * * ?"), 3).build();
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -85,6 +85,6 @@ public final class JobCoreConfigurationTest {
     
     @Test(expected = IllegalArgumentException.class)
     public void assertBuildWhenTotalSHardingCountIsNegative() {
-        JobCoreConfiguration.newBuilder(null, "0/1 * * * * ?", -1).build();
+        JobCoreConfiguration.newBuilder(null, new TriggerConfiguration("0/1 * * * * ?"), -1).build();
     }
 }

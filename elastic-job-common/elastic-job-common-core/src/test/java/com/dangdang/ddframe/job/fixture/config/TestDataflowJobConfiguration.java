@@ -20,6 +20,7 @@ package com.dangdang.ddframe.job.fixture.config;
 import com.dangdang.ddframe.job.config.JobCoreConfiguration;
 import com.dangdang.ddframe.job.config.JobRootConfiguration;
 import com.dangdang.ddframe.job.config.JobTypeConfiguration;
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import com.dangdang.ddframe.job.config.dataflow.DataflowJobConfiguration;
 import com.dangdang.ddframe.job.executor.handler.JobProperties;
 import com.dangdang.ddframe.job.fixture.ShardingContextsBuilder;
@@ -34,7 +35,7 @@ public final class TestDataflowJobConfiguration implements JobRootConfiguration 
     
     @Override
     public JobTypeConfiguration getTypeConfig() {
-        return new DataflowJobConfiguration(JobCoreConfiguration.newBuilder(ShardingContextsBuilder.JOB_NAME, "0/1 * * * * ?", 3)
+        return new DataflowJobConfiguration(JobCoreConfiguration.newBuilder(ShardingContextsBuilder.JOB_NAME, new TriggerConfiguration("0/1 * * * * ?"), 3)
                 .jobProperties(JobProperties.JobPropertiesEnum.JOB_EXCEPTION_HANDLER.getKey(), IgnoreJobExceptionHandler.class.getCanonicalName()).build(), 
                 TestDataflowJob.class.getCanonicalName(), streamingProcess);
     }

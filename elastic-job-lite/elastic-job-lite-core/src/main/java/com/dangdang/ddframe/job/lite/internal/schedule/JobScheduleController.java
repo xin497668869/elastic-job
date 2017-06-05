@@ -17,6 +17,8 @@
 
 package com.dangdang.ddframe.job.lite.internal.schedule;
 
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
+import com.dangdang.ddframe.job.config.trigger.TriggerType;
 import com.dangdang.ddframe.job.exception.JobSystemException;
 import lombok.RequiredArgsConstructor;
 import org.quartz.CronScheduleBuilder;
@@ -27,6 +29,9 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
+
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * 作业调度控制器.
@@ -45,12 +50,11 @@ public final class JobScheduleController {
     /**
      * 调度作业.
      * 
-     * @param cron CRON表达式
      */
-    public void scheduleJob(final String cron) {
+    public void scheduleJob(final TriggerConfiguration triggerConfiguration) {
         try {
             if (!scheduler.checkExists(jobDetail.getKey())) {
-                scheduler.scheduleJob(jobDetail, createTrigger(cron));
+                scheduler.scheduleJob(jobDetail, createTrigger(triggerConfiguration));
             }
             scheduler.start();
         } catch (final SchedulerException ex) {
@@ -61,21 +65,35 @@ public final class JobScheduleController {
     /**
      * 重新调度作业.
      * 
-     * @param cron CRON表达式
      */
-    public synchronized void rescheduleJob(final String cron) {
+    public synchronized void rescheduleJob(final TriggerConfiguration triggerConfiguration) {
         try {
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(TriggerKey.triggerKey(triggerIdentity));
-            if (!scheduler.isShutdown() && null != trigger && !cron.equals(trigger.getCronExpression())) {
-                scheduler.rescheduleJob(TriggerKey.triggerKey(triggerIdentity), createTrigger(cron));
+            if (!scheduler.isShutdown() && null != trigger  ) {
+                scheduler.rescheduleJob(TriggerKey.triggerKey(triggerIdentity), createTrigger(triggerConfiguration));
             }
         } catch (final SchedulerException ex) {
             throw new JobSystemException(ex);
         }
     }
-    
-    private CronTrigger createTrigger(final String cron) {
-        return TriggerBuilder.newTrigger().withIdentity(triggerIdentity).withSchedule(CronScheduleBuilder.cronSchedule(cron).withMisfireHandlingInstructionDoNothing()).build();
+
+    private Trigger createTrigger(final TriggerConfiguration triggerConfiguration) {
+        switch (triggerConfiguration.getTriggerType()) {
+            case TriggerType.SimpleScheduleBuilder:
+                return TriggerBuilder.newTrigger().withIdentity(triggerIdentity)
+                        .startAt(new Date(triggerConfiguration.getStartDate()))
+                        .endAt(new Date(triggerConfiguration.getEndDate()))
+                        .build();
+            case TriggerType.CoreScheduleBuilder:
+                return TriggerBuilder.newTrigger().withIdentity(triggerIdentity)
+                        .withSchedule(CronScheduleBuilder.cronSchedule(triggerConfiguration.getTriggerContent())
+                                .inTimeZone(TimeZone.getTimeZone(triggerConfiguration.getZone()))
+                                .withMisfireHandlingInstructionDoNothing())
+                        .startAt(new Date(triggerConfiguration.getStartDate()))
+                        .endAt(new Date(triggerConfiguration.getEndDate()))
+                        .build();
+        }
+        throw new JobSystemException("并不是合法的TriggerType");
     }
     
     /**

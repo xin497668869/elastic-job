@@ -22,6 +22,7 @@ import com.dangdang.ddframe.job.api.dataflow.DataflowJob;
 import com.dangdang.ddframe.job.api.script.ScriptJob;
 import com.dangdang.ddframe.job.config.JobCoreConfiguration;
 import com.dangdang.ddframe.job.config.JobTypeConfiguration;
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import com.dangdang.ddframe.job.config.dataflow.DataflowJobConfiguration;
 import com.dangdang.ddframe.job.config.script.ScriptJobConfiguration;
 import com.dangdang.ddframe.job.config.simple.SimpleJobConfiguration;
@@ -111,7 +112,7 @@ public abstract class AbstractBaseStdJobTest {
     }
     
     private LiteJobConfiguration initJobConfig(final Class<? extends ElasticJob> elasticJobClass) {
-        String cron = "0/1 * * * * ?";
+        TriggerConfiguration cron = new TriggerConfiguration("0/1 * * * * ?");
         int totalShardingCount = 3;
         String shardingParameters = "0=A,1=B,2=C";
         JobCoreConfiguration jobCoreConfig = JobCoreConfiguration.newBuilder(jobName, cron, totalShardingCount).shardingItemParameters(shardingParameters)
@@ -165,7 +166,7 @@ public abstract class AbstractBaseStdJobTest {
         LiteJobConfiguration liteJobConfig = LiteJobConfigurationGsonFactory.fromJson(regCenter.get("/" + jobName + "/config"));
         assertThat(liteJobConfig.getTypeConfig().getCoreConfig().getShardingTotalCount(), is(3));
         assertThat(liteJobConfig.getTypeConfig().getCoreConfig().getShardingItemParameters(), is("0=A,1=B,2=C"));
-        assertThat(liteJobConfig.getTypeConfig().getCoreConfig().getCron(), is("0/1 * * * * ?"));
+        assertThat(liteJobConfig.getTypeConfig().getCoreConfig().getTriggerConfiguration(), is(new TriggerConfiguration("0/1 * * * * ?")));
         if (disabled) {
             assertThat(regCenter.get("/" + jobName + "/servers/" + JobRegistry.getInstance().getJobInstance(jobName).getIp()), is(ServerStatus.DISABLED.name()));
             while (null != regCenter.get("/" + jobName + "/leader/election/instance")) {

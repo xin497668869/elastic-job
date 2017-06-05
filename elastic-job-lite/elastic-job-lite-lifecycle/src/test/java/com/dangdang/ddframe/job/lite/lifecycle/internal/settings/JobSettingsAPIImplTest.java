@@ -17,6 +17,7 @@
 
 package com.dangdang.ddframe.job.lite.lifecycle.internal.settings;
 
+import com.dangdang.ddframe.job.config.TriggerConfiguration;
 import com.dangdang.ddframe.job.executor.handler.JobProperties.JobPropertiesEnum;
 import com.dangdang.ddframe.job.executor.handler.impl.DefaultExecutorServiceHandler;
 import com.dangdang.ddframe.job.executor.handler.impl.DefaultJobExceptionHandler;
@@ -70,7 +71,7 @@ public class JobSettingsAPIImplTest {
         assertThat(jobSettings.getJobType(), is(jobType));
         assertThat(jobSettings.getJobClass(), is(className));
         assertThat(jobSettings.getShardingTotalCount(), is(3));
-        assertThat(jobSettings.getCron(), is("0/1 * * * * ?"));
+        assertThat(jobSettings.getTriggerConfiguration(), is(new TriggerConfiguration("0/1 * * * * ?")));
         assertThat(jobSettings.getShardingItemParameters(), is(""));
         assertThat(jobSettings.getJobParameter(), is("param"));
         assertThat(jobSettings.isMonitorExecution(), is(true));
@@ -100,7 +101,7 @@ public class JobSettingsAPIImplTest {
         jobSettings.setShardingTotalCount(10);
         jobSettings.setMaxTimeDiffSeconds(-1);
         jobSettings.setMonitorExecution(true);
-        jobSettings.setCron("0/1 * * * * ?");
+        jobSettings.setTriggerConfiguration(new TriggerConfiguration("0/1 * * * * ?"));
         jobSettings.setStreamingProcess(true);
         jobSettings.setFailover(false);
         jobSettings.setMisfire(true);
@@ -126,15 +127,15 @@ public class JobSettingsAPIImplTest {
     public void assertUpdateJobSettingsIfCronIsEmpty() {
         JobSettings jobSettings = new JobSettings();
         jobSettings.setJobName("test_job");
-        jobSettings.setCron("");
-        jobSettingsAPI.updateJobSettings(jobSettings);
+//        jobSettings.setTriggerConfiguration("");
+//        jobSettingsAPI.updateJobSettings(jobSettings);
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void assertUpdateJobSettingsIfShardingTotalCountLessThanOne() {
         JobSettings jobSettings = new JobSettings();
         jobSettings.setJobName("test_job");
-        jobSettings.setCron("0/1 * * * * ?");
+//        jobSettings.setCron(new TriggerConfiguration("0/1 * * * * ?"));
         jobSettings.setShardingTotalCount(0);
         jobSettingsAPI.updateJobSettings(jobSettings);
     }

@@ -63,7 +63,7 @@ public class JobConfigurationContextTest {
     public void assertSimpleJobConfigurationContextWithExecutionType() throws JobExecutionEnvironmentException {
         Map<String, String> context = buildJobConfigurationContextMap(JobType.SIMPLE);
         assertTrue(new JobConfigurationContext(context).isTransient());
-        context.put("cron", "0/1 * * * * ?");
+        context.put("cron", new TriggerConfiguration("0/1 * * * * ?"));
         assertFalse(new JobConfigurationContext(context).isTransient());
     }
     
